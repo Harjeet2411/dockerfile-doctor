@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dockerfile-doctor"
+version = "0.1.0"
+description = "Find security and image-size problems in Dockerfiles, with a fix for each"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.9"
+authors = [{ name = "Harjeet J L" }]
+keywords = ["docker", "dockerfile", "linter", "containers", "devsecops", "sarif"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Topic :: Security",
+  "Topic :: Software Development :: Quality Assurance",
+  "Environment :: Console",
+]
+
+[project.scripts]
+dockerfile-doctor = "dockerfile_doctor.cli:main"
+
+[tool.setuptools]
+packages = ["dockerfile_doctor"]

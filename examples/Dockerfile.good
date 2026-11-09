@@ -1,0 +1,19 @@
+# syntax=docker/dockerfile:1
+FROM python:3.12-slim@sha256:0f3c2d6b4c8f6b0e7f53a3fbbf1c6d9a8c4f2f7d1b2c3e4f5a6b7c8d9e0f1a2b AS build
+WORKDIR /src
+COPY requirements.txt .
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+COPY . .
+
+FROM python:3.12-slim@sha256:0f3c2d6b4c8f6b0e7f53a3fbbf1c6d9a8c4f2f7d1b2c3e4f5a6b7c8d9e0f1a2b
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends curl \
+ && rm -rf /var/lib/apt/lists/* \
+ && useradd --system --uid 10001 app
+COPY --from=build /install /usr/local
+COPY --from=build /src /app
+WORKDIR /app
+USER app
+EXPOSE 8000
+HEALTHCHECK CMD curl -fsS http://localhost:8000/health || exit 1
+CMD ["python", "-m", "app"]
